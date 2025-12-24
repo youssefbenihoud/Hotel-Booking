@@ -1,0 +1,18 @@
+meta {
+  name: ADD ROOM
+  type: http
+  seq: 2
+}
+
+post {
+  url: {{host}}/api/room/add
+  body: multipartForm
+  auth: none
+}
+
+body:multipart-form {
+  name: Room 1
+  description: Room Description
+  price: 123
+  image: @file(/Users/user/Documents/Workstation/THB/MERN/hotel-booking/HotelBooking/frontend/src/assets/Double-1.jpg)
+}
