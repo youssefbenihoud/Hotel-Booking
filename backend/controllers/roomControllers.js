@@ -12,7 +12,6 @@ const addRoom = async (req, res) => {
       description: req.body.description,
       price: req.body.price,
       image: image_url.secure_url,
-      facilities: req.body.facilities
     });
 
     await room.save();
