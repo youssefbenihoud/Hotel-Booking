@@ -2,7 +2,7 @@ import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Login = () => {
   const { setToken, url } = useContext(AuthContext);
@@ -55,6 +55,9 @@ const Login = () => {
             Login
           </button>
         </form>
+        <p className="text-center">
+            Don't have an account? <Link to="/register" className="text-blue-600 hover:underline">Register here</Link>
+        </p>
       </div>
     </div>
   );

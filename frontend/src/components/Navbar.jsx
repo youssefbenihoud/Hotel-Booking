@@ -24,9 +24,11 @@ const Navbar = () => {
 
         <div>
           <ul className="flex justify-between gap-8">
-            <li className="font-bold text-lg cursor-pointer hover:text-lime-400">
-              Bookings
-            </li>
+            <Link to="/bookings">
+                <li className="font-bold text-lg cursor-pointer hover:text-lime-400">
+                Bookings
+                </li>
+            </Link>
             <li className="font-bold text-lg cursor-pointer hover:text-lime-400">
               Rooms
             </li>
@@ -38,11 +40,18 @@ const Navbar = () => {
                 Logout
               </li>
             ) : (
-              <Link to="/login">
-                <li className="font-bold text-lg cursor-pointer hover:text-lime-400">
-                  Login
-                </li>
-              </Link>
+              <>
+                <Link to="/login">
+                  <li className="font-bold text-lg cursor-pointer hover:text-lime-400">
+                    Login
+                  </li>
+                </Link>
+                <Link to="/register">
+                  <li className="font-bold text-lg cursor-pointer hover:text-lime-400">
+                    Register
+                  </li>
+                </Link>
+              </>
             )}
           </ul>
         </div>
