@@ -1,0 +1,21 @@
+meta {
+  name: LIST RESERVATIONS
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{host}}/api/reservation/list
+  body: json
+  auth: none
+}
+
+headers {
+  token: {{userToken}}
+}
+
+body:json {
+  {
+    "userId": "{{userId}}"
+  }
+}
