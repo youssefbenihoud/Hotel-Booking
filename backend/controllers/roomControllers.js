@@ -27,7 +27,8 @@ const listRoom = async (req, res) => {
   try {
     const rooms = await roomModel.find({});
     res.json({ success: true, data: rooms });
-  } catch (error) {
+  }
+  catch (error) {
     console.log(error);
     res.json({ success: false, message: "Error" });
   }
@@ -58,4 +59,35 @@ const singleRoom = async (req, res) => {
   }
 };
 
-export { addRoom, listRoom, removeRoom, singleRoom };
+const updateRoom = async (req, res) => {
+    try {
+        const room = await roomModel.findById(req.body.id);
+        if (!room) {
+            return res.json({ success: false, message: "Room not found" });
+        }
+
+        let image_url = room.image;
+        if (req.file) {
+            if (room.image) {
+                const public_id = room.image.split("/").pop().split(".")[0];
+                await cloudinary.uploader.destroy(public_id);
+            }
+            const result = await cloudinary.uploader.upload(req.file.path);
+            image_url = result.secure_url;
+            fs.unlink(req.file.path, () => {});
+        }
+
+        room.name = req.body.name || room.name;
+        room.description = req.body.description || room.description;
+        room.price = req.body.price || room.price;
+        room.image = image_url;
+
+        await room.save();
+        res.json({ success: true, message: "Room Updated" });
+    } catch (error) {
+        console.log(error);
+        res.json({ success: false, message: "Error" });
+    }
+};
+
+export { addRoom, listRoom, removeRoom, singleRoom, updateRoom };

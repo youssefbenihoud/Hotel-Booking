@@ -24,4 +24,24 @@ const listReservations = async (req, res) => {
     }
 }
 
-export { createReservation, listReservations };
+const listAllReservations = async (req, res) => {
+    try {
+        const reservations = await reservationModel.find({}).populate('user').populate('room');
+        res.json({success: true, data: reservations});
+    } catch (error) {
+        console.log(error);
+        res.json({success: false, message: "Error"});
+    }
+}
+
+const removeReservation = async (req, res) => {
+    try {
+        await reservationModel.findByIdAndDelete(req.body.id);
+        res.json({success: true, message: "Reservation removed"});
+    } catch (error) {
+        console.log(error);
+        res.json({success: false, message: "Error"});
+    }
+}
+
+export { createReservation, listReservations, listAllReservations, removeReservation };

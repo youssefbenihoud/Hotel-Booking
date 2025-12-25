@@ -4,6 +4,7 @@ import {
   listRoom,
   removeRoom,
   singleRoom,
+  updateRoom,
 } from "../controllers/roomControllers.js";
 import upload from "../middleware/multer.js";
 
@@ -13,5 +14,6 @@ roomRouter.post("/add", upload.single("image"), addRoom);
 roomRouter.get("/list", listRoom);
 roomRouter.get("/:id", singleRoom);
 roomRouter.post("/remove", removeRoom);
+roomRouter.post("/update", upload.single("image"), updateRoom);
 
 export { roomRouter };
