@@ -1,0 +1,19 @@
+meta {
+  name: GET ROOMS
+  type: http
+  seq: 1
+}
+
+get {
+  url: {{host}}/api/room/list
+  body: none
+  auth: none
+}
+
+headers {
+  token: {{adminToken}}
+}
+
+vars:post-response {
+  roomId: res.body.data[0]._id
+}

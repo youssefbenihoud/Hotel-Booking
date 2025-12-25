@@ -1,0 +1,25 @@
+meta {
+  name: DELETE ROOM
+  type: http
+  seq: 3
+}
+
+post {
+  url: {{host}}/api/room/remove
+  body: json
+  auth: none
+}
+
+headers {
+  token: {{adminToken}}
+}
+
+body:json {
+  {
+    "id":"{{roomId}}"
+  }
+}
+
+body:multipart-form {
+  id: {{id}}
+}

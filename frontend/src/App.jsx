@@ -4,17 +4,30 @@ import { Route, Routes } from "react-router-dom";
 import Homepage from "./pages/Homepage";
 import HotelDetails from "./pages/HotelDetails";
 import Footer from "./components/Footer";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Bookings from "./pages/Bookings";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+import AuthContextProvider from "./context/AuthContext";
+import RoomContextProvider from "./context/RoomContext";
 
 const App = () => {
   return (
-    <div>
-      <Navbar />
-      <Routes>
-        <Route path="/" element={<Homepage />} />
-        <Route path="/room/:id" element={<HotelDetails />} />
-      </Routes>
-      <Footer />
-    </div>
+    <AuthContextProvider>
+      <RoomContextProvider>
+        <ToastContainer />
+        <Navbar />
+        <Routes>
+          <Route path="/" element={<Homepage />} />
+          <Route path="/room/:id" element={<HotelDetails />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/bookings" element={<Bookings />} />
+        </Routes>
+        <Footer />
+      </RoomContextProvider>
+    </AuthContextProvider>
   );
 };
 
