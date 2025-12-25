@@ -1,21 +1,32 @@
 import roomModel from "../models/roomModel.js";
 import { v2 as cloudinary } from "cloudinary";
-import fs from "fs";
+import streamifier from "streamifier";
 
 const addRoom = async (req, res) => {
   try {
-    const image_filename = req.file.filename;
-    const image_url = await cloudinary.uploader.upload(req.file.path);
+    const streamUpload = (req) => {
+      return new Promise((resolve, reject) => {
+        const stream = cloudinary.uploader.upload_stream((error, result) => {
+          if (result) {
+            resolve(result);
+          } else {
+            reject(error);
+          }
+        });
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+    };
+
+    const result = await streamUpload(req);
 
     const room = new roomModel({
       name: req.body.name,
       description: req.body.description,
       price: req.body.price,
-      image: image_url.secure_url,
+      image: result.secure_url,
     });
 
     await room.save();
-    fs.unlink(req.file.path, () => {});
     res.json({ success: true, message: "Room Added" });
   } catch (error) {
     console.log(error);
@@ -72,9 +83,20 @@ const updateRoom = async (req, res) => {
                 const public_id = room.image.split("/").pop().split(".")[0];
                 await cloudinary.uploader.destroy(public_id);
             }
-            const result = await cloudinary.uploader.upload(req.file.path);
+            const streamUpload = (req) => {
+                return new Promise((resolve, reject) => {
+                  const stream = cloudinary.uploader.upload_stream((error, result) => {
+                    if (result) {
+                      resolve(result);
+                    } else {
+                      reject(error);
+                    }
+                  });
+                  streamifier.createReadStream(req.file.buffer).pipe(stream);
+                });
+              };
+            const result = await streamUpload(req);
             image_url = result.secure_url;
-            fs.unlink(req.file.path, () => {});
         }
 
         room.name = req.body.name || room.name;
