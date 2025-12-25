@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
+import { AuthContext } from '../context/AuthContext';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 
-const LoginPage = ({setIsLoggedIn}) => {
+const Login = () => {
+  const { setToken, url } = useContext(AuthContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
-  const url = import.meta.env.VITE_BACKEND_URL;
 
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post(`${url}/api/admin/login`, { email, password });
+      const response = await axios.post(`${url}/api/user/login`, { email, password });
       if (response.data.success) {
-        localStorage.setItem('token', response.data.token);
-        setIsLoggedIn(true);
-        navigate('/rooms');
+        setToken(response.data.token);
+        navigate('/');
         toast.success('Logged in successfully');
       } else {
         toast.error(response.data.message);
@@ -27,9 +27,9 @@ const LoginPage = ({setIsLoggedIn}) => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
+    <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 space-y-6 bg-white rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-center">Admin Login</h2>
+        <h2 className="text-2xl font-bold text-center">Login</h2>
         <form onSubmit={handleLogin} className="space-y-6">
           <div>
             <label className="text-sm font-bold text-gray-600 block">Email</label>
@@ -60,4 +60,4 @@ const LoginPage = ({setIsLoggedIn}) => {
   );
 };
 
-export default LoginPage;
+export default Login;

@@ -12,8 +12,8 @@ import adminAuth from "../middleware/adminAuth.js";
 const roomRouter = express.Router();
 
 roomRouter.post("/add", adminAuth, upload.single("image"), addRoom);
-roomRouter.get("/list", adminAuth, listRoom);
-roomRouter.get("/:id", adminAuth, singleRoom);
+roomRouter.get("/list", listRoom);
+roomRouter.get("/:id", singleRoom);
 roomRouter.post("/remove", adminAuth, removeRoom);
 roomRouter.post("/update", adminAuth, upload.single("image"), updateRoom);
 

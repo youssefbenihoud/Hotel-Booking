@@ -1,7 +1,16 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 
 const Navbar = () => {
+  const { token, setToken } = useContext(AuthContext);
+  const navigate = useNavigate();
+
+  const logout = () => {
+    setToken(null);
+    navigate("/");
+  };
+
   return (
     <div>
       <nav className="flex justify-between p-[2rem] bg-black text-white">
@@ -24,6 +33,17 @@ const Navbar = () => {
             <li className="font-bold text-lg cursor-pointer hover:text-lime-400">
               Contact
             </li>
+            {token ? (
+              <li onClick={logout} className="font-bold text-lg cursor-pointer hover:text-lime-400">
+                Logout
+              </li>
+            ) : (
+              <Link to="/login">
+                <li className="font-bold text-lg cursor-pointer hover:text-lime-400">
+                  Login
+                </li>
+              </Link>
+            )}
           </ul>
         </div>
       </nav>

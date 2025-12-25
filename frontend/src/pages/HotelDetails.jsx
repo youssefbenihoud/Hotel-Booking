@@ -1,18 +1,55 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { useParams } from "react-router-dom";
 import { RoomContext } from "../context/RoomContext";
+import { AuthContext } from "../context/AuthContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 
 const HotelDetails = () => {
   const { id } = useParams();
   const { rooms } = useContext(RoomContext);
+  const { token, url } = useContext(AuthContext);
+  const [bookingData, setBookingData] = useState({
+    checkIn: "",
+    checkOut: "",
+    guests: 1,
+  });
 
-  const room = rooms.find((room) => room.id === parseInt(id));
+  const room = rooms.find((room) => room._id === id);
 
   if (!room) {
     return <div>Room not found</div>;
   }
 
-  const { name, description, price, image, facilities } = room;
+  const { name, description, price, image } = room;
+
+  const handleBooking = async (e) => {
+    e.preventDefault();
+    if (!token) {
+      toast.error("You must be logged in to book a room.");
+      return;
+    }
+
+    const reservationData = {
+      room: room._id,
+      ...bookingData,
+    };
+
+    try {
+      const response = await axios.post(
+        `${url}/api/reservation/create`,
+        reservationData,
+        { headers: { token } }
+      );
+      if (response.data.success) {
+        toast.success("Room booked successfully!");
+      } else {
+        toast.error(response.data.message);
+      }
+    } catch (error) {
+      toast.error("Booking failed.");
+    }
+  };
 
   return (
     <section className="py-24">
@@ -20,11 +57,7 @@ const HotelDetails = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           {/* Room Image */}
           <div>
-            <img
-              src={image}
-              alt={name}
-              className="rounded-lg shadow-lg w-full"
-            />
+            <img src={image} alt={name} className="rounded-lg shadow-lg w-full" />
           </div>
 
           {/* Room Details & Booking Form */}
@@ -35,55 +68,46 @@ const HotelDetails = () => {
             </p>
             <p className="text-gray-600 mb-8">{description}</p>
 
-            {/* Facilities */}
-            <div className="mb-8">
-              <h3 className="text-2xl font-semibold mb-4">Facilities</h3>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
-                {facilities.map((facility, index) => (
-                  <div key={index} className="flex items-center gap-3">
-                    <span className="text-lime-500">{facility.icon}</span>
-                    <span>{facility.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-
             {/* Booking Form */}
-            <form className="bg-gray-100 p-8 rounded-lg shadow-md">
+            <form
+              onSubmit={handleBooking}
+              className="bg-gray-100 p-8 rounded-lg shadow-md"
+            >
               <h3 className="text-2xl font-bold mb-6">Book Your Stay</h3>
               <div className="grid grid-cols-1 gap-6">
-                <input
-                  type="text"
-                  placeholder="Name"
-                  className="w-full px-4 py-3 rounded-md outline-none border border-gray-300 focus:border-lime-500"
-                />
-                <input
-                  type="email"
-                  placeholder="Email"
-                  className="w-full px-4 py-3 rounded-md outline-none border border-gray-300 focus:border-lime-500"
-                />
-                <input
-                  type="tel"
-                  placeholder="Phone"
-                  className="w-full px-4 py-3 rounded-md outline-none border border-gray-300 focus:border-lime-500"
-                />
                 <div className="grid grid-cols-2 gap-6">
                   <input
                     type="date"
-                    placeholder="Check-in"
+                    value={bookingData.checkIn}
+                    onChange={(e) =>
+                      setBookingData({ ...bookingData, checkIn: e.target.value })
+                    }
                     className="w-full px-4 py-3 rounded-md outline-none border border-gray-300 focus:border-lime-500"
+                    required
                   />
                   <input
                     type="date"
-                    placeholder="Check-out"
+                    value={bookingData.checkOut}
+                    onChange={(e) =>
+                      setBookingData({
+                        ...bookingData,
+                        checkOut: e.target.value,
+                      })
+                    }
                     className="w-full px-4 py-3 rounded-md outline-none border border-gray-300 focus:border-lime-500"
+                    required
                   />
                 </div>
                 <input
                   type="number"
                   placeholder="Number of Guests"
                   min="1"
+                  value={bookingData.guests}
+                  onChange={(e) =>
+                    setBookingData({ ...bookingData, guests: e.target.value })
+                  }
                   className="w-full px-4 py-3 rounded-md outline-none border border-gray-300 focus:border-lime-500"
+                  required
                 />
                 <button
                   type="submit"
@@ -101,3 +125,4 @@ const HotelDetails = () => {
 };
 
 export default HotelDetails;
+

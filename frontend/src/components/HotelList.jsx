@@ -36,13 +36,13 @@ const HotelList = () => {
         <div className="grid grid-cols-2 gap-10">
           {rooms && rooms.length > 0 ? (
             rooms.map((room, index) => {
-              const { id, image, name, price } = room;
+              const { _id, image, name, price } = room;
               return (
                 <div
                   key={index}
                   className="bg-white shadow rounded-lg overflow-hidden"
                 >
-                  <Link to={`/room/${id}`}>
+                  <Link to={`/room/${_id}`}>
                     <img
                       src={image}
                       alt=""

@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 
 const Reservations = () => {
   const [reservations, setReservations] = useState([]);
-  const url = "http://localhost:4000";
+  const url = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem('token');
   const headers = { token };
 

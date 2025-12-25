@@ -6,7 +6,7 @@ const Rooms = () => {
   const [rooms, setRooms] = useState([]);
   const [newRoom, setNewRoom] = useState({ name: '', description: '', price: '', image: null });
   const [editingRoom, setEditingRoom] = useState(null);
-  const url = "http://localhost:4000";
+  const url = import.meta.env.VITE_BACKEND_URL;
   const token = localStorage.getItem('token');
   const headers = { token };
 
